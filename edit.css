@@ -164,9 +164,6 @@ body.drag #content {
   cursor:pointer;
 }
 
-#menus-share-hint {
-  content:'hello';
-}
 #toolbar .disabled {
   opacity:0.333;
 }

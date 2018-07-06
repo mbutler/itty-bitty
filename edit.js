@@ -25,10 +25,8 @@ window.onload = function() {
   content.contentEditable = 'true';
   content.focus();
   document.execCommand('selectAll',false,null);
-  QS('#qrcode').onclick = makeQRCode
-  QS('#twitter').onclick = copyThenLink
   QS('#copy').onclick = copyLink
-  QS('#menu').onclick = toggleMenu
+
   var hash = window.location.hash.substring(1)
   
   if (hash.length) {
@@ -160,20 +158,17 @@ function handleInput(e) {
   var text = content.innerText;
   var title = QS("#doc-title").innerText;
 
-  var rawHTML = (text.indexOf("</") > 0);
-  if (rawHTML) {
+  var strip = false;
+  if (text.indexOf("</") > 0) {
     text = text.replace(/[\n|\t]+/g,' ').replace(/> +</g, '> <')
   } else {
     text = content.innerHTML
+    strip = true
   }
    
   if (text.trim().length) {
     stringToZip(text, function(zip) {
-      if (rawHTML) {
-        updateLink(DATA_PREFIX_BXZE + zip, title)
-      } else {
-        updateLink("?" + zip, title)
-      }
+      updateLink("?" + zip, title)
     });
     setFileName("")
   } else if (importedFileData) {
@@ -193,9 +188,9 @@ var maxLengths = {
 function updateLink(url, title, push) {
   if (title) title = encodeURIComponent(title.trim().replace(/\s/g, "_"))
   if (url.length) {
-    url = "/#" + (title || "") + "/" + url
+    url = "/truth/#" + (title || "") + "/" + url
   } else {
-    url = "/edit"
+    url = "/truth/edit.html"
   }
   var hash = location.hash
   if (push || !hash || !hash.length) {
@@ -233,6 +228,7 @@ function copyThenLink() {
 }
 function copyLink() {
   var text = location.href
+  console.log(text)
   var dummy = document.createElement("input");
   document.body.appendChild(dummy);
   dummy.value = text;
